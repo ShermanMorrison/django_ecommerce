@@ -5,6 +5,10 @@ import os
 PROJECT_ROOT = os.path.realpath(os.path.dirname(__file__))
 SITE_ROOT = os.path.dirname(PROJECT_ROOT)
 
+STRIPE_SECRET = 'sk_test_IRgQaO2C5WYrYAbM2sHcyDPu'
+STRIPE_PUBLISHABLE = 'pk_test_aGnmTn0mI2qLt7zVE8cpT4Lg'
+
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -77,6 +81,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    (os.path.join(SITE_ROOT, 'static')),
 )
 
 # List of finder classes that know how to find static files in
@@ -133,7 +138,7 @@ INSTALLED_APPS = (
     # Custom Apps
     'main',
     'contact',
-
+    'payments',
 )
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
