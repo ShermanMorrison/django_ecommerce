@@ -1,6 +1,5 @@
-{% load static %}
-
 <!DOCTYPE html>
+{% load static %}
 <html>
     <head>
         <title>MVP</title>
@@ -8,8 +7,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
-
+        <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
         <style>
             <!--make the 'jumbotrons' look cool-->
             body {
@@ -74,6 +72,12 @@
                     <li><a href="{% url 'home' %}">Home</a></li>
                     <li><a href="/pages/about">About</a></li>
                     <li><a href="{% url 'contact' %}">Contact</a></li>
+                    {% if user %}
+                        <li><a href="{% url 'sign_out' %}">Log Out</a></li>
+                    {% else %}
+                        <li><a href="{% url 'sign_in' %}">Log in</a></li>
+                        <li><a href="{% url 'register' %}">Register</a></li>
+                    {% endif %}
                 </ul>
                 <h3><span class="fui-settings-16 muted">MVP</span></h3>
             </div>

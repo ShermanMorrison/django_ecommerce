@@ -17,16 +17,16 @@ def soon():
     return {'month': soon.month, 'year': soon.year}
 
 
-def sign_in():
+def sign_in(request):
     return HttpResponseRedirect('/')
 
 
-def sign_out():
+def sign_out(request):
     return HttpResponseRedirect('/')
 
-
-def edit():
-    return HttpResponseRedirect('/')
+#
+# def edit(request):
+#     return HttpResponseRedirect('/')
 
 
 def register(request):
@@ -67,9 +67,9 @@ def register(request):
             else:
                 print "Save user payment profile"
                 request.session['user'] = user.pk
+                print request.session['user']
                 return HttpResponseRedirect('/')
     else:
-        print "Form wasn't valid bro!"
         form = UserForm()
 
     return render_to_response(
@@ -86,9 +86,42 @@ def register(request):
     )
 
 
+def edit(request):
+    uid = request.session.get('user')
 
+    if uid is None:
+        return HttpResponseRedirect('/')
 
+    print "uid = " + str(uid)
+    user = User.objects.get(pk=uid)
 
+    if request.method == 'POST':
+        form = CardForm(request.POST)
+        if form.is_valid():
+            customer = stripe.Customer.retrieve(user.stripe_id)
+            customer.card = form.cleaned_data['stripe_token']
+            customer.save()
+
+            user.last_4_digits = form.cleaned_data['last_4_digits']
+            user.stripe_id = customer.id
+            user.save()
+
+            return HttpResponseRedirect('/')
+
+    else:
+        form = CardForm()
+
+    return render_to_response(
+        'edit.html',
+        {
+            'form': form,
+            'publishable': settings.STRIPE_PUBLISHABLE,
+            'soon': soon(),
+            'months': range(1, 12),
+            'years': range(2011, 2036)
+        },
+        context_instance=RequestContext(request)
+    )
 
 
 
