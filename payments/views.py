@@ -18,10 +18,39 @@ def soon():
 
 
 def sign_in(request):
-    return HttpResponseRedirect('/')
+    user = None
+    if request.method == 'POST':
+        form = SigninForm(request.POST)
+        if form.is_valid():
+            results = User.objects.filter(email=form.cleaned_data['email'])
+            if len(results) == 1:
+                print "Found him!"
+                if results[0].check_password(form.cleaned_data['password']):
+                    print "We good!"
+                    request.session['user'] = results[0].pk
+                    return HttpResponseRedirect('/')
+                print "No good"
+            else:
+                form.addError('Incorrect email address or password')
+        else:
+            form.addError('Invalid email address or password')
+    else:
+        form = SigninForm()
+
+    print form.non_field_errors()
+
+    return render_to_response(
+        'sign_in.html',
+        {
+            'form': form,
+            'user': user
+        },
+        context_instance=RequestContext(request)
+    )
 
 
 def sign_out(request):
+    del request.session['user']
     return HttpResponseRedirect('/')
 
 #
