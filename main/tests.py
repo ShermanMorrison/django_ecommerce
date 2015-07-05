@@ -6,11 +6,12 @@ Replace this with more appropriate tests for your application.
 """
 
 from django.test import TestCase
+from django.core.urlresolvers import resolve
+from .views import index
 
 
-class SimpleTest(TestCase):
-    def test_basic_addition(self):
-        """
-        Tests that 1 + 1 always equals 2.
-        """
-        self.assertEqual(1 + 1, 2)
+class MainPageTests(TestCase):
+
+    def test_root_resolves_to_main_view(self):
+        main_page = resolve('/')
+        self.assertEqual(main_page.func, index)
